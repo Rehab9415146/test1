@@ -1,0 +1,66 @@
+﻿@inject Microsoft.AspNetCore.Identity.UserManager<ChatUser>    _userManager
+@inject Microsoft.AspNetCore.Identity.SignInManager<ChatUser>        _signInManager
+
+@{
+   
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/index.css" />
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/ChatWindow.js"></script>
+<script src="~/js/index.js"></script>
+
+
+@if (_signInManager.IsSignedIn(User) == false)
+{
+    <div class="text-center">
+        <h1 class="display-4"></h1>
+        <p>Please <a asp-controller="Account" asp-action="Login">login</a> to see online friends.</p>
+    </div>
+}
+else
+{
+    <div class="row h-100">
+        <div class="col-4 col-md-3 border-left">
+            <div class="pl-2">
+                <div class="form-inline input-group">
+                    <input id="AddFriendUsername" class="form-control" type="text" name="AddFriendUsername" placeholder="Username" />
+                    <button class="btn btn-danger" onclick="AddFriend_Click()">Add User</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        Friends
+                    </div>
+                    <ul id="FriendList" class="list-group list-group-flush">
+                        <li id="FriendRowTemplate" class="list-group-item friendListItem" style="display:none;" onclick="FriendListItem_Clicked(this)"></li>
+
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-8 col-md-9 pl-0 d-flex flex-column mb-2" id="ChatWindow">
+            <div class="messageLine mb-2" style="display:none" id="UserMessageTemplate">
+                <div class="userMessageSpacer"></div>
+                <div class="message userMessage"></div>
+            </div>
+
+            <div class="messageLine mb-2" style="display:none;" id="FriendMessageTemplate">
+                <div class="message friendMessage">
+
+                </div>
+            </div>
+            <div id="ChatPanel" class="chatContainer" onmousewheel="ChatPanel_Scrolled(this)">
+
+
+            </div>
+            <div id="InputRow" class="mr-3 d-flex" style="display:none!important">
+                <input type="text" id="txtMessageInput" class="form-control flex-grow-1 mr-2" placeholder="Type a message..." autocomplete="off" />
+                <button id="btnSendMessage" class="btn-primary form-control" style="max-width:100px;flex-shrink:1;">Send</button>
+            </div>
+        </div>
+    </div>
+}
+
